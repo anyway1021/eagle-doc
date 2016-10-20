@@ -1,1 +1,39 @@
 site_name: Eagle Documentation
+
+site_url: 
+
+site_favicon: include/images/favicon.png
+
+pages:
+  - 'Getting Started':
+    - 'Introduction': 'getting-started/introduction.md'
+    - 'Concepts': 'getting-started/concepts.md'
+    - 'Architecture': 'getting-started/architecture.md'
+    - 'Use Cases': 'getting-started/use-cases.md'
+    - 'Quick Start': 'getting-started/quick-start/index.md'
+  - 'Using Eagle':
+    - 'Overview': 'using-eagle/overview.md'
+    - 'Server Configuration': 'using-eagle/server-configuration.md'
+    - 'Managing Applications': 'using-eagle/managing-applications.md'
+    - 'Site Management': 'using-eagle/site-management.md'
+    - 'Policy and Alert': 'using-eagle/policy-and-alert/index.md'
+    - 'Troubleshooting and Debugging': 'using-eagle/troubleshooting-and-debugging.md'
+    - 'Monitor Eagle': 'using-eagle/monitor-eagle.md'
+  - 'Applications':
+    - 'HDFS Data Activity Monitoring': 'applications/hdfs-data-activity-monitoring.md'
+    - 'JMX Monitoring': 'applications/jmx-monitoring.md'
+    - 'Job Performance Monitoring': 'applications/job-performance-monitoring.md'
+  - 'Developing Application':
+    - 'Application Development': 'developing-application/application-development.md'
+  - 'Underlying Design':
+    - 'Alert Engine': 'underlying-design/alert-engine/index.md'
+    - 'Application Framework': 'underlying-design/application-framework.md'
+    - 'Metric Storage': 'underlying-design/metric-storage.md'
+    - 'UI Framework': 'underlying-design/ui-framework.md'
+  - 'Reference':
+    - 'Configuration': 'reference/configuration.md'
+    - 'Rest APIs': 'reference/rest-apis.md'
+
+theme: readthedocs
+
+theme_dir: eagle-theme

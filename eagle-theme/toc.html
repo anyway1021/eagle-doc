@@ -1,0 +1,38 @@
+<!-- this macro is to fetch the first child element that has url and return the url as the default one of the section -->
+{% macro fetchDefaultUrl(ni) %}
+    {% if ni.url %}
+        {{ ni.url }}
+    {% elif ni.children %}
+        {{ fetchDefaultUrl(ni.children|first()) }}
+    {% else %}
+        {{ "" }}
+    {% endif %}
+{% endmacro %}
+
+<!-- generate side nav based on navigation configured in mkdocs.yml -->
+{% if nav_item.children %}
+    {% if nav_item.active %}
+        <ul class="subnav">
+            <li><a class="current active-topic" href="{{ fetchDefaultUrl(nav_item) }}">{{ nav_item.title }}</a></li>
+            {% for nav_item in nav_item.children %}
+                {% include 'toc.html' %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <li><a href="{{ fetchDefaultUrl(nav_item) }}">{{ nav_item.title }}</a></li>
+    {% endif %}
+{% else %}
+    <li class="toctree-l1 {% if nav_item.active%}current{%endif%}">
+        <a class="{% if nav_item.active%}current{%endif%}" href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+        {% if nav_item == current_page %}
+            <ul>
+            {% for toc_item in toc %}
+                <li class="toctree-l3"><a href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
+                {% for toc_item in toc_item.children %}
+                    <li><a class="toctree-l4" style="padding-left: 4em;" href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endif %}
