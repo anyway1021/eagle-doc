@@ -1,1 +1,13 @@
 site_name: Eagle Documentation
+
+pages:
+ - Release: release.md
+ - Design: design.md
+ - Roadmap: roadmap.md
+ - Community: community.md
+ - Contribute to Eagle: contributing.md
+ - FAQ: faq.md
+ - Development: development-guide.md
+ - Documentation: documentation.md
+ - Tutorial: tutorial.md
+ - Proposal: proposal.md
