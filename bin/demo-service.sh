@@ -43,12 +43,21 @@ FULL_NAME="${PROGRAM}-${SHELL_NAME}-${PORT}"
 LOG_FILE="${ROOT_DIR}/${LOG_DIR}/${FULL_NAME}.out"
 PID_FILE="${ROOT_DIR}/${TEMP_DIR}/${FULL_NAME}-pid"
 
+CURR_USER="$(whoami)"
+echo -n "[sudo] password for ${CURR_USER}: "
+read -s PWD
+echo 
+
 if [ ! -e ${ROOT_DIR}/${LOG_DIR} ]; then
-	mkdir -p ${ROOT_DIR}/${LOG_DIR}
+	echo ${PWD} | sudo mkdir -p ${ROOT_DIR}/${LOG_DIR}
+	echo ${PWD} | sudo chown -R ${USER}:${GROUP} ${ROOT_DIR}/${LOG_DIR}
+	echo ${PWD} | sudo chmod -R ${FILE_MOD} ${ROOT_DIR}/${LOG_DIR}
 fi
 
 if [ ! -e ${ROOT_DIR}/${TEMP_DIR} ]; then
-	mkdir -p ${ROOT_DIR}/${TEMP_DIR}
+	echo ${PWD} | sudo mkdir -p ${ROOT_DIR}/${TEMP_DIR}
+	echo ${PWD} | sudo chown -R ${USER}:${GROUP} ${ROOT_DIR}/${TEMP_DIR}
+	echo ${PWD} | sudo chmod -R ${FILE_MOD} ${ROOT_DIR}/${TEMP_DIR}
 fi
 
 cd ${ROOT_DIR}
