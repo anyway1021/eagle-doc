@@ -1,1 +1,0 @@
-`Placeholder for topic: HDFS Data Activity Monitoring`
