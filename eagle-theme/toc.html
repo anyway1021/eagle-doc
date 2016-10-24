@@ -1,3 +1,11 @@
+<script>
+    function select(elem) {
+        var selectedClassName = "selected";
+        $(".wy-menu-vertical li.selected").removeClass(selectedClassName);
+        $(elem).addClass(selectedClassName);
+    }
+</script>
+
 <!-- 
     this macro is to fetch the first child element that has url and return the url as the default one of the section
     arguemnt:
@@ -20,10 +28,11 @@
       affected_levels: a number indicating how many toc item levels should indent
  -->
 {% macro getIndentationStyle(current_level, affected_levels) %}
+    {% set offset = 2 %}
     {% if current_level != 0 %}
-        {% set pix = 1 * current_level %}
+        {% set pix = 1 * current_level + offset %}
         {% if current_level > affected_levels %}
-            {% set pix = 1 * affected_levels %}
+            {% set pix = 1 * affected_levels + offset %}
         {% endif %}
         {{ "style=\"padding-left: "~pix~"em;\""}}
     {% else %}
@@ -38,7 +47,7 @@
       affected_levels: a number indicating how many toc item levels should indent
  -->
 {% macro showNestedToc(toc_item, current_level, affected_levels) %}
-    <li class="{%if current_level == 0%}toctree-l3{%else%}toctree-l4{%endif%}" {{getIndentationStyle(current_level, affected_levels)}}}><a href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
+    <li class="{%if current_level == 0%}toctree-l3{%else%}toctree-l4{%endif%}" onclick="select(this)"><a {{getIndentationStyle(current_level, affected_levels)}} href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
     {% if toc_item.children %}
         <ul>
         {% for toc_i in toc_item.children %}
