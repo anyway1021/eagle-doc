@@ -36,6 +36,11 @@ h3, h4, h5, h6 {
     color: #FFF;
 }
 
+.wy-menu-vertical li.selected {
+    background-color: #d6d6d6;
+    font-size: 120%;
+}
+
 /*
  * Long navigations run off the bottom of the screen as the nav
  * area doesn't scroll.
