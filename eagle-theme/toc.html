@@ -25,15 +25,11 @@
     this macro generates the style for indentation on sub tocs in side nav
     argument:
       current_level: the level number of current toc item
-      affected_levels: a number indicating how many toc item levels should indent
+      max_level: a number indicating how many toc item levels should show up
  -->
-{% macro getIndentationStyle(current_level, affected_levels) %}
-    {% set offset = 2 %}
+{% macro getIndentationStyle(current_level, max_level) %}
     {% if current_level != 0 %}
-        {% set pix = 1 * current_level + offset %}
-        {% if current_level > affected_levels %}
-            {% set pix = 1 * affected_levels + offset %}
-        {% endif %}
+        {% set pix = 1 * current_level + 2 %}
         {{ "style=\"padding-left: "~pix~"em;\""}}
     {% else %}
         {{ "" }}
@@ -44,16 +40,20 @@
     this macro shows toc items including nested tocs, toc nesting level would depending on arguments described below
     argument:
       current_level: the level number of current toc item
-      affected_levels: a number indicating how many toc item levels should indent
+      max_level: a number indicating how many toc item levels should show up
  -->
-{% macro showNestedToc(toc_item, current_level, affected_levels) %}
-    <li class="{%if current_level == 0%}toctree-l3{%else%}toctree-l4{%endif%}" onclick="select(this)"><a {{getIndentationStyle(current_level, affected_levels)}} href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
-    {% if toc_item.children %}
-        <ul>
-        {% for toc_i in toc_item.children %}
-            {{ showNestedToc(toc_i, current_level+1, affected_levels) }}
-        {% endfor %}
-        </ul>
+{% macro showNestedToc(toc_item, current_level, max_level) %}
+    {% if current_level < max_level %}
+        <li class="{%if current_level == 0%}toctree-l3{%else%}toctree-l4{%endif%}" onclick="select(this)"><a {{getIndentationStyle(current_level, max_level)}} href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
+        {% if toc_item.children %}
+            <ul>
+            {% for toc_i in toc_item.children %}
+                {{ showNestedToc(toc_i, current_level+1, max_level) }}
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        {{""}}
     {% endif %}
 {% endmacro %}
 
