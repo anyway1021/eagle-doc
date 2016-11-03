@@ -1,8 +1,12 @@
 # HDFS Data Activity Monitoring
 `Placeholder for topic: HDFS Data Activity Monitoring`
 
+---
+
 # JMX Monitoring
 `Placeholder for topic: JMX Monitoring`
+
+---
 
 # Job Performance Monitoring
 
@@ -70,6 +74,7 @@ All columns above are predefined in stream map_reduce_failed_job_stream defined 
 
 Then, enable the policy in web ui after it's created. Eagle will schedule it automatically.
 
-# FAQ
+---
 
+# FAQ
 `Placeholder for topic: FAQ`

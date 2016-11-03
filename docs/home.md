@@ -4,6 +4,8 @@
 
 ![overview](include/images/overview.png)
 
+---
+
 # Example Use Cases
 
 ## Data Activity Monitoring
@@ -23,6 +25,8 @@
 * It is critical to understand why a cluster performs bad. Is that because of some crazy jobs recently on-boarded, or huge amount of tiny files, or namenode performance degrading?
 
 * Eagle in realtime calculates resource usage per minute out of individual jobs, e.g. CPU, memory, HDFS IO bytes, HDFS IO numOps etc. and also collects namenode JMX metrics. Correlating them together will easily help system administrator find root cause for cluster slowness.
+
+---
 
 # Disclaimer
 
