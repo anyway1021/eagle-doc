@@ -106,9 +106,10 @@ An "Application Descriptor" is a static packaged metadata information consist of
 ```
 ## Application Provider
 
-An "application provider" in fact is a package management and loading mechanism leveraging Java SPI (reference: https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
+An "application provider" in fact is a package management and loading mechanism leveraging [Java SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
 
-For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider: 
+For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider:
+
 ```xml
 org.apache.eagle.app.jpm.JPMWebApplicationProvider
 ```
@@ -132,109 +133,7 @@ A "Stream" is the streaming data from a data source. Each data source has its ow
 ---
 
 # Introduction
-
-## Introduction
-
-Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to ingest hadoop/hbase jmx metric as eagle stream and provide ability to define alert policy and detect anomaly in real-time from metric.
-
-|   Sample   ||
-| :---: | :---: |
-| **Type**    | *HADOOP_JMX_METRIC_MONITOR* |
-| **Version** | *0.5.0-version* |
-| **Description** | *Collect JMX Metric and monitor in real-time* |
-| **Streams** | *HADOOP_JMX_METRIC_STREAM* |
-| **Configuration** | JMX Metric Kafka Topic (default: hadoop_jmx_metric_{SITE_ID}) |
-|  | Kafka Broker List (default: localhost:6667) |
-
-## Setup & Installation
-
-* Make sure already setup a site (here use a demo site named "sandbox").
-
-* Install "Hadoop JMX Monitor" app in eagle server.
-
-    ![Install Step 2](include/images/install_jmx_2.png)
-
-* Configure Application settings.
-
-    ![Install Step 3](include/images/install_jmx_3.png)
-
-* Ensure a kafka topic named hadoop_jmx_metric_{SITE_ID} (In current guide, it should be hadoop_jmx_metric_sandbox)
-
-* Setup metric collector for monitored Hadoop/HBase using hadoop_jmx_collector and modify the configuration.
-
-    * Collector scripts: [hadoop_jmx_collector](https://github.com/apache/incubator-eagle/tree/master/eagle-external/hadoop_jmx_collector)
-
-    * Rename config-sample.json to config.json: [config-sample.json](https://github.com/apache/incubator-eagle/blob/master/eagle-external/hadoop_jmx_collector/config-sample.json)
-
-```json
-{
-    env: {
-        site: "sandbox",
-        name_node: {
-            hosts: [
-                "sandbox.hortonworks.com"
-            ],
-            port: 50070,
-            https: false
-        },
-        resource_manager: {
-            hosts: [
-                "sandbox.hortonworks.com"
-            ],
-            port: 50030,
-            https: false
-        }
-    },
-    inputs: [{
-        component: "namenode",
-        host: "server.eagle.apache.org",
-        port: "50070",
-        https: false,
-        kafka_topic: "nn_jmx_metric_sandbox"
-    }, {
-        component: "resourcemanager",
-        host: "server.eagle.apache.org",
-        port: "8088",
-        https: false,
-        kafka_topic: "rm_jmx_metric_sandbox"
-    }, {
-        component: "datanode",
-        host: "server.eagle.apache.org",
-        port: "50075",
-        https: false,
-        kafka_topic: "dn_jmx_metric_sandbox"
-    }],
-    filter: {
-        monitoring.group.selected: [
-            "hadoop",
-            "java.lang"
-        ]
-    },
-    output: {
-        kafka: {
-            brokerList: [
-                "localhost:9092"
-            ]
-        }
-    }
-}
-```
-
-* Click "Install" button then you will see the HADOOP_JMX_METRIC_STREAM_{SITE_ID} in Streams.
-
-    ![Install Step 6](include/images/install_jmx_6.png)
-
-## Usage
-
-### Define JMX Alert Policy
-
-1. Go to "Define Policy".
-
-2. Select HADOOP_JMX_METRIC_MONITOR related streams.
-
-3. Define SQL-Like policy, for example
-
-    ![Define JMX Alert Policy](include/images/define_jmx_alert_policy.png)
+`Placeholder for topic: Introduction`
 
 ---
 
