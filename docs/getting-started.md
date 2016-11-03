@@ -31,10 +31,10 @@ Eagle requires the following dependencies:
     * Mysql 5.1.x or later
         * Installation is required
 
-Notice:
+Notice:  
+>     Storm 0.9.x does NOT support JDK8. You can replace asm-4.0.jar with asm-all-5.0.jar in the storm lib directory. 
+>     Then restart other services(nimbus/ui/supervisor). 
 
-    Storm 0.9.x does NOT support JDK8. You can replace asm-4.0.jar with asm-all-5.0.jar in the storm lib directory. 
-    Then restart other services(nimbus/ui/supervisor). 
 
 ### Installation
 
@@ -49,25 +49,17 @@ Notice:
         mvn clean install -DskipTests.
         
 ##### Deploy Eagle
-
-* Copy binary package to your server machine. In the package, you should find
-
-		bin/: scripts used for start eagle server
-        conf/: default configurations for eagle server setup.
-        lib/ : all included software packages for eagle server
-
-
+* Copy binary package to your server machine. In the package, you should find:
+    * bin/: scripts used for start eagle server
+    * conf/: default configurations for eagle server setup.
+    * lib/ : all included software packages for eagle server
 * Change configurations under conf/
 	* eagle.conf
     * server.yml
-        	
 * Run eagle-server.sh
-
-        ./bin/eagle-server.sh start
-        
+    * ./bin/eagle-server.sh start
 * Check eagle server
-
-        In your web browser, visit http://host:port/
+    * In your web browser, visit http://host:port/
 
 ## Setup Your Monitoring Case
 `Placeholder for topic: Setup Your Monitoring Case`
