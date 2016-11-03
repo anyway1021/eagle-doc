@@ -1,14 +1,247 @@
 # Architecture
-`Placeholder for topic: Architecture`
+
+## Overview
+
+![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png)
+
+## Ecosystem
+
+![Eagle Ecosystem](include/images/eagle_ecosystem.png)
+
+### Eagle Framework
+
+Eagle has multiple distributed real-time frameworks for efficiently developing highly scalable monitoring applications.
+
+* Alert Engine
+
+`Placeholder for topic: Alert Engine`
+
+* Storage Engine
+
+`Placeholder for topic: Storage Engine`
+
+* Application Framework
+
+`Placeholder for topic: Application Framework`
+
+* UI Framework
+
+`Placeholder for topic: UI Framework`
+
+### Eagle Apps
+
+Security/ Hadoop/ Operational Intelligence / …. For see more applications, see [Applications](applications).
+
+### Eagle Interface
+
+REST Service / Management UI / Customizable Analytics Visualization
+
+### Eagle Integration
+
+Ambari / Docker / Ranger / Dataguise
+
+---
 
 # Concepts
-`Placeholder for topic: Concepts`
+
+Here are some terms we are using in Apache Eagle (incubating, called Eagle in the following), please check them for your reference. They are basic knowledge of Eagle which also will help to well understand Eagle.
+
+## Site
+
+A site can be considered as a physical data center. Big data platform e.g. Hadoop may be deployed to multiple data centers in an enterprise.
+
+## Application
+
+An "Application" or "App" is composed of data integration, policies and insights for one data source.
+
+## Application Descriptor
+
+An "Application Descriptor" is a static packaged metadata information consist of:
+
+* **Basic information**: type, name, version, description.
+* **Application**: the application process to run.
+* **Configuration Descriptor**:  describe the configurations required by the application when starting like name, displayName, defaultValue Description, required, etc. which will automatically be visualized in configuration editor.
+* **Streams**: the streams schema the application will export.
+* **Docs**: application specific documentations which will be embedded in necessary area during the whole lifecyle of application management.
+
+**Sample**: ApplicationDesc of JPM_WEB_APP
+```json
+{
+    type: "JPM_WEB_APP",
+    name: "Job Performance Monitoring Web ",
+    version: "0.5.0-incubating",
+    description: null,
+    appClass: "org.apache.eagle.app.StaticApplication",
+    jarPath: "/opt/eagle/0.5.0-incubating-SNAPSHOT-build-20161103T0332/eagle-0.5.0-incubating-SNAPSHOT/lib/eagle-topology-0.5.0-incubating-SNAPSHOT-hadoop-2.4.1-11-assembly.jar",
+    viewPath: "/apps/jpm",
+    providerClass: "org.apache.eagle.app.jpm.JPMWebApplicationProvider",
+    configuration: {
+        properties: [{
+            name: "service.host",
+            displayName: "Eagle Service Host",
+            value: "localhost",
+            description: "Eagle Service Host, default: localhost",
+            required: false
+        }, {
+            name: "service.port",
+            displayName: "Eagle Service Port",
+            value: "8080",
+            description: "Eagle Service Port, default: 8080",
+            required: false
+        }]
+    },
+    streams: null,
+    docs: null,
+    executable: false,
+    dependencies: [{
+        type: "MR_RUNNING_JOB_APP",
+        version: "0.5.0-incubating",
+        required: true
+    }, {
+        type: "MR_HISTORY_JOB_APP",
+        version: "0.5.0-incubating",
+        required: true
+    }]
+}
+```
+## Application Provider
+
+An "application provider" in fact is a package management and loading mechanism leveraging Java SPI (reference: https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
+
+For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider: 
+```xml
+org.apache.eagle.app.jpm.JPMWebApplicationProvider
+```
+
+## Policy
+
+A "Policy" defines the rule to alert. Policy can be simply a filter expression or a complex window based aggregation rules etc.
+
+## Alerts
+
+An "Alert" is an real-time event detected with certain alert policy or correlation logic, with different severity levels like INFO/WARNING/DANGER.
+
+## Data Source
+
+A "Data Source" is a monitoring target data. Eagle supports many data sources HDFS audit logs, Hive2 query, MapReduce job etc.
+
+## Stream
+
+A "Stream" is the streaming data from a data source. Each data source has its own stream.
+
+---
 
 # Introduction
-`Placeholder for topic: Introduction`
+
+## Introduction
+
+Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to ingest hadoop/hbase jmx metric as eagle stream and provide ability to define alert policy and detect anomaly in real-time from metric.
+
+|   Sample   ||
+| :---: | :---: |
+| **Type**    | *HADOOP_JMX_METRIC_MONITOR* |
+| **Version** | *0.5.0-version* |
+| **Description** | *Collect JMX Metric and monitor in real-time* |
+| **Streams** | *HADOOP_JMX_METRIC_STREAM* |
+| **Configuration** | JMX Metric Kafka Topic (default: hadoop_jmx_metric_{SITE_ID}) |
+|  | Kafka Broker List (default: localhost:6667) |
+
+## Setup & Installation
+
+* Make sure already setup a site (here use a demo site named "sandbox").
+
+* Install "Hadoop JMX Monitor" app in eagle server.
+
+    ![Install Step 2](include/images/install_jmx_2.png)
+
+* Configure Application settings.
+
+    ![Install Step 3](include/images/install_jmx_3.png)
+
+* Ensure a kafka topic named hadoop_jmx_metric_{SITE_ID} (In current guide, it should be hadoop_jmx_metric_sandbox)
+
+* Setup metric collector for monitored Hadoop/HBase using hadoop_jmx_collector and modify the configuration.
+
+    * Collector scripts: [hadoop_jmx_collector](https://github.com/apache/incubator-eagle/tree/master/eagle-external/hadoop_jmx_collector)
+
+    * Rename config-sample.json to config.json: [config-sample.json](https://github.com/apache/incubator-eagle/blob/master/eagle-external/hadoop_jmx_collector/config-sample.json)
+
+```json
+{
+    env: {
+        site: "sandbox",
+        name_node: {
+            hosts: [
+                "sandbox.hortonworks.com"
+            ],
+            port: 50070,
+            https: false
+        },
+        resource_manager: {
+            hosts: [
+                "sandbox.hortonworks.com"
+            ],
+            port: 50030,
+            https: false
+        }
+    },
+    inputs: [{
+        component: "namenode",
+        host: "server.eagle.apache.org",
+        port: "50070",
+        https: false,
+        kafka_topic: "nn_jmx_metric_sandbox"
+    }, {
+        component: "resourcemanager",
+        host: "server.eagle.apache.org",
+        port: "8088",
+        https: false,
+        kafka_topic: "rm_jmx_metric_sandbox"
+    }, {
+        component: "datanode",
+        host: "server.eagle.apache.org",
+        port: "50075",
+        https: false,
+        kafka_topic: "dn_jmx_metric_sandbox"
+    }],
+    filter: {
+        monitoring.group.selected: [
+            "hadoop",
+            "java.lang"
+        ]
+    },
+    output: {
+        kafka: {
+            brokerList: [
+                "localhost:9092"
+            ]
+        }
+    }
+}
+```
+
+* Click "Install" button then you will see the HADOOP_JMX_METRIC_STREAM_{SITE_ID} in Streams.
+
+    ![Install Step 6](include/images/install_jmx_6.png)
+
+## Usage
+
+### Define JMX Alert Policy
+
+1. Go to "Define Policy".
+
+2. Select HADOOP_JMX_METRIC_MONITOR related streams.
+
+3. Define SQL-Like policy, for example
+
+    ![Define JMX Alert Policy](include/images/define_jmx_alert_policy.png)
+
+---
 
 # Use Cases
 `Placeholder for topic: Use Cases`
+
+---
 
 # Quick Start
 
