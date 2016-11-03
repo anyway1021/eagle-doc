@@ -5,6 +5,7 @@ site_url:
 site_favicon: include/images/favicon.png
 
 pages:
+  - 'Home': 'home.md'
   - 'Getting Started': 'getting-started.md'
   - 'Using Eagle': 'using-eagle.md'
   - 'Applications': 'applications.md'
