@@ -1,2 +1,2 @@
 # eagle-doc
-Temporarily holding new eagle documentation made by MkDocs
+Temporarily holding new eagle documentation made by MkDocs.
