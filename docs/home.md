@@ -12,31 +12,31 @@
 
 ### Application
 
-* Application is the first-class citizen in Apache Eagle, it stands for an end-to-end monitoring/alerting solution, which usually contains the monitoring source onboarding, source schema specification, alerting policy and dashboard definition.
+* Application(or Monitoring Application) is the first-class citizen in Apache Eagle, it stands for an end-to-end monitoring/alerting solution, which usually contains the monitoring source onboarding, source schema specification, alerting policy and dashboard definition.
 
 ### Stream
 
-* Stream is the input for Alert Engine, each Application should have its own stream to be defined.
+* Stream is the input for Alert Engine, each Application should have its own stream to be defined by the developer. Usually, it will have a POJO-like structure included in the stream definition. Once it's defined, Application should have the logic to write data into Kafka.
 
 ### Data Activity Monitoring
 
-* The built-in application to monitor HDFS/HBase/Hive operations, and allow users to define certain policies to capture security breached in real-time.
+* A built-in monitoring application to monitor HDFS/HBase/Hive operations, and allow users to define certain policies to detect sensitive data access and malicious data operations in real-time.
 
 ### Alert Engine
 
-* A specific application shared for all other monitoring applications, it reads data from Kafka, and processes the data by applying the policy in real-time manner, and generates alert notification. So we call this application as the Alert Engine.
+* A specific built-in application shared for all other monitoring applications, it reads data from Kafka, and processes the data by applying the policy in real-time manner, and generates alert notification. So we call this application as the Alert Engine.
 
 ### Policy
 
-* A rule used by Alert Engine to matching the data input from Kafka.
+* A rule used by Alert Engine to match the data input from Kafka. Policy is defined in [SiddhiQL](https://docs.wso2.com/display/CEP300/Siddhi+Language+Specification) format.
 
 ### Alert 
 
-* If any data input to Alert Engine meets the policy, the Alert Engine will generate a message to a notification channel. We call those messages as the alerts.
+* If any data input to Alert Engine meets the policy, the Alert Engine will generate a message and publish it through alert publisher. We call such messages as the alerts.
 
-### Notification Channel
+### Alert Publisher
 
-* The channel where alert are sent to, it can be the SMTP channel or the Kafka channel.
+* It will publish the alert to external channels which can be the SMTP channel, the Kafka channel, Slack channel or other storage systems.
 
 ## Key Qualities
 
