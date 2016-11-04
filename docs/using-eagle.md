@@ -1,18 +1,18 @@
 # Manage Eagle and Services
 
-After Apache Eagle has been deployed (please reference [**deployment**](getting-started/#deployment)), you can enter deployment directory and use commands below to control Apache Eagle Server.
+* After Apache Eagle has been deployed (please reference [**deployment**](getting-started/#deployment)), you can enter deployment directory and use commands below to control Apache Eagle Server.
 
     ./bin/eagle-server.sh start|stop|status
 
-After starting the Eagle server, please type http://<EAGLE_SERVER_HOST>:<PORT>/ to open the web ui of Eagle.
+* After starting the Eagle server, please type http://<EAGLE_SERVER_HOST>:<PORT>/ to open the web ui of Eagle.
 
 ---
 
 # Use Eagle Web Interface
 
-This is the typical Web Interface (short for WI) after setting up your Eagle monitoring environment. WI majorly contain the right main panel and left function menu.
+* This is the typical Web Interface (short for WI) after setting up your Eagle monitoring environment. WI majorly contain the right main panel and left function menu.
 
-![Eagle Web Interface](include/images/eagle_web_interface.png)
+    ![Eagle Web Interface](include/images/eagle_web_interface.png)
 
 ## Home
 
