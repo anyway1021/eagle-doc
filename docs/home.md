@@ -42,31 +42,31 @@
 
 ### Extensible
 
-* Eagle built the core framework around the application concept, everything has its runtime logic is built into an application. Developer can easily develop his own out-of-box monitoring application using Eagle application framework, and deploy into Eagle.
+* Apache Eagle built its core framework around the application concept, application itself includes the logic for monitoring source data collection, pre-processing and normalization. Developer can easily develop his own out-of-box monitoring applications using Eagle's application framework, and deploy into Eagle.
 
 ### Scalable
 
-* The Eagle core team choose the proven big data technologies to build the fundamental runtime, like the distributed
+* The Eagle core team has chosen the proven big data technologies to build its fundamental runtime, and apply a scalable core to make it adaptive according to the throughput of data stream as well as the number of monitored applications.
 
 ### Real-time
 
-* Storm or Spark Streaming based computing engine allow us to apply the policy to input data and generate alerts in real-time manner.
+* Storm or Spark Streaming based computing engine allow us to apply the policy to data stream and generate alerts in real-time manner.
 
 ### Dynamic
 
-* Eagle user can dynamically change their alert policies without any impact to the underlying runtime.
+* The user can freely enable or disable a monitoring application without restarting the service. Eagle user can dynamically add/delet/change their alert policies without any impact to the underlying runtime.
 
 ### Easy-of-Use
 
-* User can enable the monitoring for a service within minutes effort by just choose the built-in monitoring application and configure few parameters for the service.
+* User can enable the monitoring for a service within minutes effort by just choosing the corresponding monitoring application and configuring few parameters for the service.
 
 ### Non-Invasive
 
-* Apache Eagle uses the out-of-box applications to monitor services, you don't need any change to those services.
+* Apache Eagle uses the out-of-box applications to monitor services, you don't need any change to your existing services.
 
 ---
 
-# Example Use Cases
+# Use Case Examples
 
 ## Data Activity Monitoring
 
