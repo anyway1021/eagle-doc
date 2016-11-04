@@ -175,7 +175,7 @@ Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to
 
 ## Metrics List
 
-Please refer to the [Hadoop Metrics List](reference/#hadoop-metrics-list) and see which metrics you're interested in.
+Please refer to the [Hadoop Metrics List](hadoop-jmx-metrics-list.txt) and see which metrics you're interested in.
 
 ---
 
