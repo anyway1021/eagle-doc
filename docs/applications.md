@@ -71,8 +71,7 @@ Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to
 | **Version** | *0.5.0-version* |
 | **Description** | *Collect JMX Metric and monitor in real-time* |
 | **Streams** | *HADOOP_JMX_METRIC_STREAM* |
-| **Configuration** | JMX Metric Kafka Topic (default: hadoop_jmx_metric_{SITE_ID}) |
-|  | Kafka Broker List (default: localhost:6667) |
+| **Configuration** | JMX Metric Kafka Topic (default: hadoop_jmx_metric_{SITE_ID})<br/><br/>Kafka Broker List (default: localhost:6667) |
 
 ## Setup & Installation
 
@@ -152,9 +151,7 @@ Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to
 
     ![Install Step 6](include/images/install_jmx_6.png)
 
-## Usage
-
-### Define JMX Alert Policy
+## Define JMX Alert Policy
 
 1. Go to "Define Policy".
 
@@ -162,7 +159,23 @@ Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to
 
 3. Define SQL-Like policy, for example
 
-    ![Define JMX Alert Policy](include/images/define_jmx_alert_policy.png)
+        from HADOOP_JMX_METRIC_STREAM_SANDBOX[metric=="cpu.usage" and value > 0.9]
+        select site,host,component,value
+        insert into HADOOP_CPU_USAGE_GT_90_ALERT;
+
+    As seen in below screenshot:
+
+![Define JMX Alert Policy](include/images/define_jmx_alert_policy.png)
+
+## Stream Schema
+
+| Stream Name | Stream Schema | Time Series |
+| :---------: | :-----------: | :---------: |
+| HADOOP_JMX_METRIC_MONITOR | **host**: STRING<br/><br/>**timestamp**: LONG<br/><br/>**metric**: STRING<br/><br/>**component**: STRING<br/><br/>**site**: STRING<br/><br/>**value**: DOUBLE | True |
+
+## Metrics List
+
+Please refer to the [Hadoop Metrics List](reference/#hadoop-metrics-list) and see which metrics you're interested in.
 
 ---
 
