@@ -4,9 +4,69 @@
 
 ![overview](include/images/overview.png)
 
+## Terminology
+
+### Site
+
+* A virtual concept in Apache Eagle. You can use it to manage a group of application instances, and distinguish the applications if you have a certain application installed for multiple times.
+
+### Application
+
+* Application(or Monitoring Application) is the first-class citizen in Apache Eagle, it stands for an end-to-end monitoring/alerting solution, which usually contains the monitoring source onboarding, source schema specification, alerting policy and dashboard definition.
+
+### Stream
+
+* Stream is the input for Alert Engine, each Application should have its own stream to be defined by the developer. Usually, it will have a POJO-like structure included in the stream definition. Once it's defined, Application should have the logic to write data into Kafka.
+
+### Data Activity Monitoring
+
+* A built-in monitoring application to monitor HDFS/HBase/Hive operations, and allow users to define certain policies to detect sensitive data access and malicious data operations in real-time.
+
+### Alert Engine
+
+* A specific built-in application shared for all other monitoring applications, it reads data from Kafka, and processes the data by applying the policy in real-time manner, and generates alert notification. So we call this application as the Alert Engine.
+
+### Policy
+
+* A rule used by Alert Engine to match the data input from Kafka. Policy is defined in [SiddhiQL](https://docs.wso2.com/display/CEP300/Siddhi+Language+Specification) format.
+
+### Alert 
+
+* If any data input to Alert Engine meets the policy, the Alert Engine will generate a message and publish it through alert publisher. We call such messages as the alerts.
+
+### Alert Publisher
+
+* It will publish the alert to external channels which can be the SMTP channel, the Kafka channel, Slack channel or other storage systems.
+
+## Key Qualities
+
+### Extensible
+
+* Apache Eagle built its core framework around the application concept, application itself includes the logic for monitoring source data collection, pre-processing and normalization. Developer can easily develop his own out-of-box monitoring applications using Eagle's application framework, and deploy into Eagle.
+
+### Scalable
+
+* The Eagle core team has chosen the proven big data technologies to build its fundamental runtime, and apply a scalable core to make it adaptive according to the throughput of data stream as well as the number of monitored applications.
+
+### Real-time
+
+* Storm or Spark Streaming based computing engine allow us to apply the policy to data stream and generate alerts in real-time manner.
+
+### Dynamic
+
+* The user can freely enable or disable a monitoring application without restarting the service. Eagle user can dynamically add/delet/change their alert policies without any impact to the underlying runtime.
+
+### Easy-of-Use
+
+* User can enable the monitoring for a service within minutes effort by just choosing the corresponding monitoring application and configuring few parameters for the service.
+
+### Non-Invasive
+
+* Apache Eagle uses the out-of-box applications to monitor services, you don't need any change to your existing services.
+
 ---
 
-# Example Use Cases
+# Use Case Examples
 
 ## Data Activity Monitoring
 
@@ -30,4 +90,4 @@
 
 # Disclaimer
 
-Apache Eagle now is being incubated, and therefore, across the whole documentation site, all appearances of case-insensitive word `eagle` and `apache eagle` represent `Apache Eagle (incubating)`. This could be seen as a part of disclaimer.
+* Apache Eagle now is being incubated, and therefore, across the whole documentation site, all appearances of case-insensitive word `eagle` and `apache eagle` represent `Apache Eagle (incubating)`. This could be seen as a part of disclaimer.

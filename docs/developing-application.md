@@ -19,64 +19,56 @@ Eagle application framework is designed for end-to-end lifecycle of applications
 # Quick Start
 
 * Fork and clone eagle source code repository using GIT.
-```json
-git clone https://github.com/apache/incubator-eagle.git
-```
+
+        git clone https://github.com/apache/incubator-eagle.git
 
 * Run Eagle Server : execute “org.apache.eagle.server.ServerDebug” under eagle-server in IDE or with maven command line.
-```json
-org.apache.eagle.server.ServerDebug
-```
+
+        org.apache.eagle.server.ServerDebug
 
 * Access current available applications through API.
-```json
-curl -XGET  http://localhost:9090/rest/apps/providers
-```
+
+        curl -XGET  http://localhost:9090/rest/apps/providers
 
 * Create Site through API.
-```json
-curl -H "Content-Type: application/json" -X POST  http://localhost:9090/rest/sites --data '{
-     "siteId":"test_site",
-     "siteName":"Test Site",
-     "description":"This is a sample site for test",
-     "context":{
-          "type":"FAKE_CLUSTER",
-          "url":"http://localhost:9090",
-          "version":"2.6.4",
-          "additional_attr":"Some information about the face cluster site"
-     }
-}'
-```
+
+        curl -H "Content-Type: application/json" -X POST  http://localhost:9090/rest/sites --data '{
+             "siteId":"test_site",
+             "siteName":"Test Site",
+             "description":"This is a sample site for test",
+             "context":{
+                  "type":"FAKE_CLUSTER",
+                  "url":"http://localhost:9090",
+                  "version":"2.6.4",
+                  "additional_attr":"Some information about the face cluster site"
+             }
+        }'
 
 * Install Application through API.
-```json
-curl -H "Content-Type: application/json" -X POST http://localhost:9090/rest/apps/install --data '{
-     "siteId":"test_site",
-     "appType":"EXAMPLE_APPLICATION",
-     "mode":"LOCAL"
-}'
-```
+
+        curl -H "Content-Type: application/json" -X POST http://localhost:9090/rest/apps/install --data '{
+             "siteId":"test_site",
+             "appType":"EXAMPLE_APPLICATION",
+             "mode":"LOCAL"
+        }'
 
 * Start Application  (uuid means installed application uuid).
-```json
-curl -H "Content-Type: application/json" –X POST http://localhost:9090/rest/apps/start --data '{
-     "uuid":"9acf6792-60e8-46ea-93a6-160fb6ef0b3f"
-}'
-```
+
+        curl -H "Content-Type: application/json" –X POST http://localhost:9090/rest/apps/start --data '{
+             "uuid":"9acf6792-60e8-46ea-93a6-160fb6ef0b3f"
+        }'
 
 * Stop Application (uuid means installed application uuid).
-```json
-curl -XPOST http://localhost:9090/rest/apps/stop '{
- "uuid": "9acf6792-60e8-46ea-93a6-160fb6ef0b3f"
-}'
-```
+
+        curl -XPOST http://localhost:9090/rest/apps/stop '{
+         "uuid": "9acf6792-60e8-46ea-93a6-160fb6ef0b3f"
+        }'
 
 * Uninstall Application (uuid means installed application uuid).
-```json
-curl -XDELETE http://localhost:9090/rest/apps/uninstall '{
- "uuid": "9acf6792-60e8-46ea-93a6-160fb6ef0b3f"
-}'
-```
+
+        curl -XDELETE http://localhost:9090/rest/apps/uninstall '{
+         "uuid": "9acf6792-60e8-46ea-93a6-160fb6ef0b3f"
+        }'
 
 ---
 
@@ -134,88 +126,84 @@ eagle-app-example/
 
 * **META-INF/providers/${APP_PROVIDER_CLASS_NAME}.xml**: support to easily describe application’s descriptor with declarative XML like:
 
-```xml
-<application>
-   <type>EXAMPLE_APPLICATION</type>
-   <name>Example Monitoring Application</name>
-   <version>0.5.0-incubating</version>
-   <configuration>
-       <property>
-           <name>message</name>
-           <displayName>Message</displayName>
-           <value>Hello, example application!</value>
-           <description>Just an sample configuration property</description>
-       </property>
-   </configuration>
-   <streams>
-       <stream>
-           <streamId>SAMPLE_STREAM_1</streamId>
-           <description>Sample output stream #1</description>
-           <validate>true</validate>
-           <timeseries>true</timeseries>
-           <columns>
-               <column>
-                   <name>metric</name>
-                   <type>string</type>
-               </column>
-               <column>
-                   <name>source</name>
-                   <type>string</type>
-               </column>
-               <column>
-                   <name>value</name>
-                   <type>double</type>
-                   <defaultValue>0.0</defaultValue>
-               </column>
-           </columns>
-       </stream>
-       <stream>
-           <streamId>SAMPLE_STREAM_2</streamId>
-           <description>Sample output stream #2</description>
-           <validate>true</validate>
-           <timeseries>true</timeseries>
-           <columns>
-               <column>
-                   <name>metric</name>
-                   <type>string</type>
-               </column>
-               <column>
-                   <name>source</name>
-                   <type>string</type>
-               </column>
-               <column>
-                   <name>value</name>
-                   <type>double</type>
-                   <defaultValue>0.0</defaultValue>
-               </column>
-           </columns>
-       </stream>
-   </streams>
-</application>
-```
+        <application>
+           <type>EXAMPLE_APPLICATION</type>
+           <name>Example Monitoring Application</name>
+           <version>0.5.0-incubating</version>
+           <configuration>
+               <property>
+                   <name>message</name>
+                   <displayName>Message</displayName>
+                   <value>Hello, example application!</value>
+                   <description>Just an sample configuration property</description>
+               </property>
+           </configuration>
+           <streams>
+               <stream>
+                   <streamId>SAMPLE_STREAM_1</streamId>
+                   <description>Sample output stream #1</description>
+                   <validate>true</validate>
+                   <timeseries>true</timeseries>
+                   <columns>
+                       <column>
+                           <name>metric</name>
+                           <type>string</type>
+                       </column>
+                       <column>
+                           <name>source</name>
+                           <type>string</type>
+                       </column>
+                       <column>
+                           <name>value</name>
+                           <type>double</type>
+                           <defaultValue>0.0</defaultValue>
+                       </column>
+                   </columns>
+               </stream>
+               <stream>
+                   <streamId>SAMPLE_STREAM_2</streamId>
+                   <description>Sample output stream #2</description>
+                   <validate>true</validate>
+                   <timeseries>true</timeseries>
+                   <columns>
+                       <column>
+                           <name>metric</name>
+                           <type>string</type>
+                       </column>
+                       <column>
+                           <name>source</name>
+                           <type>string</type>
+                       </column>
+                       <column>
+                           <name>value</name>
+                           <type>double</type>
+                           <defaultValue>0.0</defaultValue>
+                       </column>
+                   </columns>
+               </stream>
+           </streams>
+        </application>
 
 * **META-INF/services/org.apache.eagle.app.spi.ApplicationProvider**: support to dynamically scan and load extensible application provider using java service provider.
 
 * **webapp/app/apps/${APP_TYPE}**: if the application has web portal, then it could add more web code under this directory and make sure building as following in pom.xml
 
-```xml
-<build>
-   <resources>
-       <resource>
-           <directory>src/main/webapp/app</directory>
-           <targetPath>assets/</targetPath>
-       </resource>
-       <resource>
-           <directory>src/main/resources</directory>
-       </resource>
-   </resources>
-   <testResources>
-       <testResource>
-           <directory>src/test/resources</directory>
-       </testResource>
-   </testResources>
-</build>
-```
+        <build>
+           <resources>
+               <resource>
+                   <directory>src/main/webapp/app</directory>
+                   <targetPath>assets/</targetPath>
+               </resource>
+               <resource>
+                   <directory>src/main/resources</directory>
+               </resource>
+           </resources>
+           <testResources>
+               <testResource>
+                   <directory>src/test/resources</directory>
+               </testResource>
+           </testResources>
+        </build>
 
 ---
 
@@ -227,41 +215,39 @@ eagle-app-example/
 
 * Test application lifecycle with related web resource.
 
-```java
-@Inject private SiteResource siteResource;
-@Inject private ApplicationResource applicationResource;
+        @Inject private SiteResource siteResource;
+        @Inject private ApplicationResource applicationResource;
 
-// Create local site
-SiteEntity siteEntity = new SiteEntity();
-siteEntity.setSiteId("test_site");
-siteEntity.setSiteName("Test Site");
-siteEntity.setDescription("Test Site for ExampleApplicationProviderTest");
-siteResource.createSite(siteEntity);
-Assert.assertNotNull(siteEntity.getUuid());
+        // Create local site
+        SiteEntity siteEntity = new SiteEntity();
+        siteEntity.setSiteId("test_site");
+        siteEntity.setSiteName("Test Site");
+        siteEntity.setDescription("Test Site for ExampleApplicationProviderTest");
+        siteResource.createSite(siteEntity);
+        Assert.assertNotNull(siteEntity.getUuid());
 
-ApplicationOperations.InstallOperation installOperation = new ApplicationOperations.InstallOperation(
-	"test_site", 
-	"EXAMPLE_APPLICATION", 
-	ApplicationEntity.Mode.LOCAL);
-installOperation.setConfiguration(getConf());
-// Install application
-ApplicationEntity applicationEntity = applicationResource
-    .installApplication(installOperation)
-    .getData();
-// Start application
-applicationResource.startApplication(new ApplicationOperations.StartOperation(applicationEntity.getUuid()));
-// Stop application
-applicationResource.stopApplication(new ApplicationOperations.StopOperation(applicationEntity.getUuid()));
-// Uninstall application
-applicationResource.uninstallApplication(
-	new ApplicationOperations.UninstallOperation(applicationEntity.getUuid()));
-try {
-   applicationResource.getApplicationEntityByUUID(applicationEntity.getUuid());
-   Assert.fail("Application instance (UUID: " + applicationEntity.getUuid() + ") should have been uninstalled");
-} catch (Exception ex) {
-   // Expected exception
-}
-```
+        ApplicationOperations.InstallOperation installOperation = new ApplicationOperations.InstallOperation(
+        	"test_site", 
+        	"EXAMPLE_APPLICATION", 
+        	ApplicationEntity.Mode.LOCAL);
+        installOperation.setConfiguration(getConf());
+        // Install application
+        ApplicationEntity applicationEntity = applicationResource
+            .installApplication(installOperation)
+            .getData();
+        // Start application
+        applicationResource.startApplication(new ApplicationOperations.StartOperation(applicationEntity.getUuid()));
+        // Stop application
+        applicationResource.stopApplication(new ApplicationOperations.StopOperation(applicationEntity.getUuid()));
+        // Uninstall application
+        applicationResource.uninstallApplication(
+        	new ApplicationOperations.UninstallOperation(applicationEntity.getUuid()));
+        try {
+           applicationResource.getApplicationEntityByUUID(applicationEntity.getUuid());
+           Assert.fail("Application instance (UUID: " + applicationEntity.getUuid() + ") should have been uninstalled");
+        } catch (Exception ex) {
+           // Expected exception
+        }
 
 ---
 
@@ -277,21 +263,23 @@ Default behavior - automatically loading from class path using SPI:
 
 ## Application REST API
 
-| Type       | Uri + Class |
-| :--------: | :---------- |
-| **DELETE** | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
-| **DELETE** | /rest/sites/{siteId} (org.apache.eagle.metadata.resource.SiteResource) |
-| **GET**    | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
-| **GET**    | /rest/sites/{siteId} (org.apache.eagle.metadata.resource.SiteResource) |
-| **POST**   | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
-| **PUT**    | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
-| **PUT**    | /rest/sites/{siteId} (org.apache.eagle.metadata.resource.SiteResource) |
-| **DELETE** | /rest/apps/uninstall (org.apache.eagle.app.resource.ApplicationResource) |
-| **GET**    | /rest/apps (org.apache.eagle.app.resource.ApplicationResource) |
-| **GET**    | /rest/apps/providers (org.apache.eagle.app.resource.ApplicationResource) |
-| **GET**    | /rest/apps/providers/{type} (org.apache.eagle.app.resource.ApplicationResource) |
-| **GET**    | /rest/apps/{appUuid} (org.apache.eagle.app.resource.ApplicationResource) |
-| **POST**   | /rest/apps/install (org.apache.eagle.app.resource.ApplicationResource) |
-| **POST**   | /rest/apps/start (org.apache.eagle.app.resource.ApplicationResource) |
-| **POST**   | /rest/apps/stop (org.apache.eagle.app.resource.ApplicationResource) |
-| **PUT**    | /rest/apps/providers/reload (org.apache.eagle.app.resource.ApplicationResource) |
+* API Table
+
+    | Type       | Uri + Class |
+    | :--------: | :---------- |
+    | **DELETE** | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
+    | **DELETE** | /rest/sites/{siteId} (org.apache.eagle.metadata.resource.SiteResource) |
+    | **GET**    | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
+    | **GET**    | /rest/sites/{siteId} (org.apache.eagle.metadata.resource.SiteResource) |
+    | **POST**   | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
+    | **PUT**    | /rest/sites (org.apache.eagle.metadata.resource.SiteResource) |
+    | **PUT**    | /rest/sites/{siteId} (org.apache.eagle.metadata.resource.SiteResource) |
+    | **DELETE** | /rest/apps/uninstall (org.apache.eagle.app.resource.ApplicationResource) |
+    | **GET**    | /rest/apps (org.apache.eagle.app.resource.ApplicationResource) |
+    | **GET**    | /rest/apps/providers (org.apache.eagle.app.resource.ApplicationResource) |
+    | **GET**    | /rest/apps/providers/{type} (org.apache.eagle.app.resource.ApplicationResource) |
+    | **GET**    | /rest/apps/{appUuid} (org.apache.eagle.app.resource.ApplicationResource) |
+    | **POST**   | /rest/apps/install (org.apache.eagle.app.resource.ApplicationResource) |
+    | **POST**   | /rest/apps/start (org.apache.eagle.app.resource.ApplicationResource) |
+    | **POST**   | /rest/apps/stop (org.apache.eagle.app.resource.ApplicationResource) |
+    | **PUT**    | /rest/apps/providers/reload (org.apache.eagle.app.resource.ApplicationResource) |
