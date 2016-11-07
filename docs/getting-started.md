@@ -1,68 +1,74 @@
 # Architecture
 
-## Eagle Framework
+![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png =500x300)
 
+### Eagle Apps
 
--> ![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png =500x300) <-
+* Security
+* Hadoop
+* Operational Intelligence
+
+For more applications, see [Applications](applications).
+
+### Eagle Interface
+
+* REST Service
+* Management UI
+* Customizable Analytics Visualization
+
+### Eagle Integration
+
+* [Apache Ambari](https://ambari.apache.org)
+* [Docker](https://www.docker.com)
+* [Apache Ranger](http://ranger.apache.org)
+* [Dataguise](https://www.dataguise.com)
+
+### Eagle Core Framework
 
 Eagle has multiple distributed real-time frameworks for efficiently developing highly scalable monitoring applications.
 
 #### Alert Engine
 
--> ![Eagle Alert Engine](include/images/alert_engine.png  =500x300) <-
+![Eagle Alert Engine](include/images/alert_engine.png  =500x300)
 
-* Real-time: Apache Storm (Execution Engine) + Kafka (Message Bus)* Declarative Policy: SQL (CEP) on Streaming	
-	* Filter	* Join	* Aggregation: Avg, Sum , Min, Max, etc	* Group by	* Having	* Stream handlers for window: TimeWindow, Batch Window, Length Window 	* Conditions and Expressions: and, or, not, ==,!=, >=, >, <=, <, and arithmetic operations	* Pattern Processing	* Sequence processing	* Event Tables: intergrate historical data in realtime processing	* SQL-Like Query: Query, Stream Definition and Query Plan compilation
-			from hadoopJmxMetricEventStream			[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
-			select metric, host, value, timestamp, component, site 
-			insert into alertStream;* Dynamical onboarding & correlation* No downtime migration and upgrading
+* Real-time: Apache Storm (Execution Engine) + Kafka (Message Bus)* Declarative Policy: SQL (CEP) on Streaming
+		from hadoopJmxMetricEventStream		[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
+		select metric, host, value, timestamp, component, site 
+		insert into alertStream;* Dynamical onboarding & correlation* No downtime migration and upgrading
 
 #### Storage Engine
 
--> ![Eagle Storage Engine](include/images/storage_engine.png =500x250) <-
+![Eagle Storage Engine](include/images/storage_engine.png =500x250)
+
 
 * Light-weight ORM Framework for HBase/RDMBS
     
-    	@Table("HbaseTableName")		@ColumnFamily("ColumnFamily")		@Prefix("RowkeyPrefix")		@Service("UniqueEntitytServiceName")		@JsonIgnoreProperties(ignoreUnknown = true)		@TimeSeries(false)		@Indexes({			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{		@Column("a")
-		private String desc;		@Column("b")		private String policyDef;		@Column("c")		private String dedupeDef;
+    	@Table("HbaseTableName")		@ColumnFamily("ColumnFamily")		@Prefix("RowkeyPrefix")		@Service("UniqueEntitytServiceName")		@JsonIgnoreProperties(ignoreUnknown = true)		@TimeSeries(false)		@Indexes({			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{		@Column("a")		private String desc;
 * Full-function SQL-Like REST Query 
 
 		Query=UniqueEntitytServiceName[@site="sandbox"]{*}
-* Optimized Rowkey design for time-series data
-
-	* Uniform HBase rowkey design
+* Optimized Rowkey design for time-series data, optimized for metric/entity/log, etc. different storage types
 	
-			Rowkey ::= Prefix | Partition Keys | timestamp | tagName | tagValue | …  
-	
-	* Metric rowkey design
-		
-			Rowkey ::= Metric Name | Partition Keys | timestamp | tagName | tagValue | …  
-	
-	* Entity rowkey design
-	
-			Rowkey ::= Default Prefix | Partition Keys | timestamp | tagName | tagValue | …
-			
-	* Log rowkey design
-	
-			Rowkey ::= Log Type | Partition Keys | timestamp | tagName | tagValue | …			Rowvalue ::= Log Content	* Native HBase Coprocessor
-		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
-* Secondary Index Support
+		Rowkey ::= Prefix | Partition Keys | timestamp | tagName | tagValue | …  
+	* Secondary Index Support
 		@Indexes({@Index(name="INDEX_NAME", columns = { "SECONDARY_INDEX_COLUMN_NAME" }, unique = true/false)})
+		* Native HBase Coprocessor
+		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
 
 ##### Application Framework
-* **Application**
+* Application
 
 	An "Application" or "App" is composed of data integration, policies and insights for one data source.
 
-* **Application Descriptor**
+* Application Descriptor
 
 	An "Application Descriptor" is a static packaged metadata information consist of
-    * **Basic information**: type, name, version, description.
-    * **Application**: the application process to run.
-    * **Configuration Descriptor**:  describe the configurations required by the application when starting like name, displayName, defaultValue Description, required, etc. which will automatically be visualized in configuration editor.
-    * **Streams**: the streams schema the application will export.
-    * **Docs**: application specific documentations which will be embedded in necessary area during the whole lifecyle of application management.
-    * **Sample**: ApplicationDesc of JPM_WEB_APP
+    * __Basic__: type, name, version, description.
+    * __Application__: the application process to run.
+    * __Configuration Descriptor____:  describe the configurations required by the application when starting like name, displayName, defaultValue Description, required, etc. which will automatically be visualized in configuration editor.
+    * __Streams__: the streams schema the application will export.
+    * __Docs: application specific documentations which will be embedded in necessary area during the whole lifecyle of application management.
+    * __Sample__: ApplicationDesc of JPM_WEB_APP
     
             {
                 type: "JPM_WEB_APP",
@@ -116,31 +122,6 @@ Eagle UI is consist of following parts:
 * Eagle Main UI
 * Eagle App Portal/Dashboard/Widgets
 * Eagle Customized Dashboard 
-
-## Ecosystem
-
--> ![Eagle Ecosystem](include/images/eagle_ecosystem.png =400x300) <-
-
-### Eagle Apps
-
-* Security
-* Hadoop
-* Operational Intelligence
-
-For more applications, see [Applications](applications).
-
-### Eagle Interface
-
-* REST Service
-* Management UI
-* Customizable Analytics Visualization
-
-### Eagle Integration
-
-* [Apache Ambari](https://ambari.apache.org)
-* [Docker](https://www.docker.com)
-* [Apache Ranger](http://ranger.apache.org)
-* [Dataguise](https://www.dataguise.com)
 
 ---
 
