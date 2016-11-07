@@ -23,7 +23,7 @@ For more applications, see [Applications](applications).
 * [Apache Ranger](http://ranger.apache.org)
 * [Dataguise](https://www.dataguise.com)
 
-### Eagle Core Framework
+### Eagle Core
 
 Eagle has multiple distributed real-time frameworks for efficiently developing highly scalable monitoring applications.
 
@@ -191,20 +191,22 @@ Notice:
         
 * Build the source code, and a tar.gz package will be generated under eagle-server-assembly/target
 
-        mvn clean install -DskipTests.
+        mvn clean install -DskipTests
         
 ##### Deploy Eagle
 * Copy binary package to your server machine. In the package, you should find:
-    * bin/: scripts used for start eagle server
-    * conf/: default configurations for eagle server setup.
-    * lib/ : all included software packages for eagle server
-* Change configurations under conf/
-	* eagle.conf
-    * server.yml
+    * __bin/__: scripts used for start eagle server
+    * __conf/__: default configurations for eagle server setup.
+    * __lib/__ : all included software packages for eagle server
+* Change configurations under `conf/`
+	* __eagle.conf__
+    * __server.yml__
 * Run eagle-server.sh
-    * ./bin/eagle-server.sh start
+    
+    	./bin/eagle-server.sh start
+
 * Check eagle server
-    * In your web browser, visit http://host:port/
+    * Visit http://host:port/ in your web browser.
 
 ## Setup Your Monitoring Case
 `Placeholder for topic: Setup Your Monitoring Case`
