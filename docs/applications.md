@@ -2,11 +2,7 @@
 
 ## Monitor Requirements
 
-This application aims to monitor user activities on HDFS via the hdfs audit log. If any abnormal user activity is detected, an alert is sent in several seconds. 
-
-## Processing Pipeline 
-
-The whole pipeline of this application is 
+This application aims to monitor user activities on HDFS via the hdfs audit log. Once any abnormal user activity is detected, an alert is sent in several seconds. The whole pipeline of this application is
 
 * Kafka ingest: this application consumes data from Kafka. In other words, users have to stream the log into Kafka first. 
 
@@ -14,9 +10,23 @@ The whole pipeline of this application is
 
 * Kafka sink: parsed data will flows into Kafka again, which will be consumed by the alert engine. 
 
-* Policy evaluation: the alert engine evaluates each data event to check if the data violate the user defined policy. An alert is generated if the data matches the policy.  
+* Policy evaluation: the alert engine (hosted in Alert Engine app) evaluates each data event to check if the data violate the user defined policy. An alert is generated if the data matches the policy.
 
 ![HDFSAUDITLOG](include/images/hdfs_audit_log.png)
+
+
+## Setup & Installation
+
+* Choose a site to install this application. For example 'sandbox'
+
+* Install "Hdfs Audit Log Monitor" app step by step
+
+    ![Install Step 2](include/images/hdfs_install_1.png)
+
+    ![Install Step 3](include/images/hdfs_install_2.png)
+
+    ![Install Step 4](include/images/hdfs_install_3.png)
+
 
 ## How to collect the log
 
@@ -34,7 +44,9 @@ Delete a file/folder on HDFS.
 from HDFS_AUDIT_LOG_ENRICHED_STREAM_SANDBOX[str:contains(src,'/tmp/test/subtest') and ((cmd=='rename' and str:contains(dst, '.Trash')) or cmd=='delete')] select * group by user insert into hdfs_audit_log_enriched_stream_out
 ```
 
-HDFS_AUDIT_LOG_ENRICHED_STREAM_SANDBOX is the input stream name, and hdfs_audit_log_enriched_stream_out is the output stream name, the content between [] is the monitoring conditions. `cmd`, `src` and `dst` is the fields of hdfs audit logs. 
+HDFS_AUDIT_LOG_ENRICHED_STREAM_SANDBOX is the input stream name, and hdfs_audit_log_enriched_stream_out is the output stream name, the content between [] is the monitoring conditions. `cmd`, `src` and `dst` is the fields of hdfs audit logs.
+
+   ![Policy 1](include/images/hdfs_policy_1.png)
 
 ### 2. classify the file/folder on HDFS
 
