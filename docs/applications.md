@@ -61,17 +61,15 @@ The example policy monitors the 'delete' operation on hosts in 'SECURITY' zone.
 
 # JMX Monitoring
 
-## Introduction
+* Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to ingest hadoop/hbase jmx metric as eagle stream and provide ability to define alert policy and detect anomaly in real-time from metric.
 
-Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to ingest hadoop/hbase jmx metric as eagle stream and provide ability to define alert policy and detect anomaly in real-time from metric.
-
-|   Sample   ||
-| :---: | :---: |
-| **Type**    | *HADOOP_JMX_METRIC_MONITOR* |
-| **Version** | *0.5.0-version* |
-| **Description** | *Collect JMX Metric and monitor in real-time* |
-| **Streams** | *HADOOP_JMX_METRIC_STREAM* |
-| **Configuration** | JMX Metric Kafka Topic (default: hadoop_jmx_metric_{SITE_ID})<br/><br/>Kafka Broker List (default: localhost:6667) |
+    |   Fields   ||
+    | :---: | :---: |
+    | **Type**    | *HADOOP_JMX_METRIC_MONITOR* |
+    | **Version** | *0.5.0-version* |
+    | **Description** | *Collect JMX Metric and monitor in real-time* |
+    | **Streams** | *HADOOP_JMX_METRIC_STREAM* |
+    | **Configuration** | *JMX Metric Kafka Topic (default: hadoop_jmx_metric_{SITE_ID})*<br/><br/>*Kafka Broker List (default: localhost:6667)* |
 
 ## Setup & Installation
 
@@ -220,28 +218,47 @@ Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to
     * **Aggregate Bolt**
         * aggregate metrics for given time period received from Divide Spout
 
+## Setup & Installation
+* Make sure already setup a site (here use a demo site named "sandbox").
+
+* Install "Map Reduce History Job" app in eagle server(Take this application as an example).
+
+* Configure Application settings
+
+    ![application configures](include/images/jpm_configure.png)
+
+* Ensure a kafka topic named {SITE_ID}_map_reduce_failed_job (In current guide, it should be sandbox_map_reduce_failed_job) will be created.
+
+* Click "Install" button then you will see the MAP_REDUCE_FAILED_JOB_STREAM_{SITE_ID} in Alert->Streams.
+    ![application configures](include/images/jpm_streams.png)
+  This application will write stream data to kafka topic(created by last step)
+  
 ## Integration With Alert Engine
 
-In order to integrate applications with alert engine, follow below steps:
+In order to integrate applications with alert engine and send alerts, follow below steps(Take Map Reduce History Job application as an example):
 
-* **define stream**
+* **define stream and configure data sink**
     * define stream in resource/META-INF/providers/xxxProviders.xml
-* **configure data sink**
-    * currently, create kafka topic
-* **emit stream data**
-    * currently, write to kafka topic
-* **define policy**
-    * define policy in web ui and enable it, eagle server will schedule it
-* **view alerts**
-    * view in alerts page
+    For example, MAP_REDUCE_FAILED_JOB_STREAM_{SITE_ID}
+    * configure data sink
+    For example, create kafka topic {SITE_ID}_map_reduce_failed_job
 
-Currently, Map Reduce History Job Monitoring has been integrated with alert engine. For example, if you want to receive map reduce job failure alerts, you can define policies (SiddhiQL) as the following:
+* **define policy**
+
+For example, if you want to receive map reduce job failure alerts, you can define policies (SiddhiQL) as the following:
 ```sql
 from map_reduce_failed_job_stream[site=="sandbox" and currentState=="FAILED"]
 select site, queue, user, jobType, jobId, submissionTime, trackingUrl, startTime, endTime
 group by jobId insert into map_reduce_failed_job_stream_out
 ```
+    
+   ![define policy](include/images/jpm_define_policy.png)
+   
+* **view alerts**
 
+You can view alerts in Alert->alerts page.
+
+## Stream Schema
 All columns above are predefined in stream map_reduce_failed_job_stream defined in
 
     eagle-jpm/eagle-jpm-mr-history/src/main/resources/META-INF/providers/org.apache.eagle.jpm.mr.history.MRHistoryJobApplicationProvider.xml
@@ -250,5 +267,100 @@ Then, enable the policy in web ui after it's created. Eagle will schedule it aut
 
 ---
 
-# FAQ
-`Placeholder for topic: FAQ`
+# Topology Health Check
+
+* Application "TOPOLOGY HEALTH CHECK" aims to monior those servies with a master-slave structured topology and provide metrics at host level.
+
+    |   Fields   ||
+    | :---: | :---: |
+    | **Type**    | *TOPOLOGY_HEALTH_CHECK* |
+    | **Version** | *0.5.0-version* |
+    | **Description** | *Collect MR,HBASE,HDFS node status and cluster ratio* |
+    | **Streams** | *TOPOLOGY_HEALTH_CHECK_STREAM* |
+    | **Configuration** | *Topology Health Check Topic (default: topology_health_check)*<br/><br/>*Kafka Broker List (default: sandobox.hortonworks.com:6667)* |
+
+## Setup & Installation
+
+* Make sure already setup a site (here use a demo site named "sandbox").
+
+* Install "Topology Health Check" app in eagle server.
+
+    ![Health Check Installation](include/images/health_check_installation.png)
+
+* Configure Application settings.
+
+    ![Health Check Settings](include/images/health_check_settings.png)
+
+* Ensure the existence of a kafka topic named topology_health_check (In current guide, it should be topology_health_check).
+
+* Click "Install" button then you will see the TOPOLOGY_HEALTH_CHECK_STREAM_{SITE_ID} on "Streams" page (Streams could be navigated in left-nav).
+
+    ![Health Check Stream](include/images/health_check_stream.png)
+
+## Define Health Check Alert Policy
+
+* Go to "Define Policy".
+
+* Select TOPOLOGY_HEALTH_CHECK related streams.
+
+* Define SQL-Like policy, for example
+
+        from TOPOLOGY_HEALTH_CHECK_STREAM_SANDBOX[status=='dead'] select * insert into topology_health_check_stream_out;
+
+    ![Health Check Policy](include/images/health_check_policy.png)
+
+---
+
+# Hadoop Queue Monitoring
+
+* This application collects metrics of Resource Manager in the following aspects:
+
+    * Scheduler Info of the cluster: http://{RM_HTTP_ADDRESS}:{PORT}/ws/v1/cluster/scheduler
+
+    * Applications of the cluster: http://{RM_HTTP_ADDRESS}:{PORT}/ws/v1/cluster/apps
+
+    * Overall metrics of the cluster: http://{RM_HTTP_ADDRESS}:{PORT}/ws/v1/cluster/metrics
+
+            by version 0.5-incubating, mainly focusing at metrics
+             - `appsPending`
+             - `allocatedMB`
+             - `totalMB`
+             - `availableMB`
+             - `reservedMB`
+             - `allocatedVirtualCores`.
+
+## Setup & Installation
+
+* Make sure already setup a site (here use a demo site named "sandbox").
+
+* From left-nav list, navigate to application managing page by "**Integration**" > "**Sites**", and hit link "**sandbox**" on right.
+
+    ![Navigate to app mgmt](include/images/hadoop_queue_monitor_1.png)
+
+* Install "Hadoop Queue Monitor" by clicking "install" button of the application.
+
+    ![Install Hadoop Queue Monitor App](include/images/hadoop_queue_monitor_2.png)
+
+* In the pop-up layout, select running mode as `Local` or `Cluster`.
+
+    ![Select Running Mode](include/images/hadoop_queue_monitor_3.png)
+
+* Set the target jar of eagle's topology assembly that has existed in eagle server, indicating the absolute path ot it. As in the following screenshot:
+
+    ![Set Jar Path](include/images/hadoop_queue_monitor_4.png)
+
+* Set Resource Manager endpoint urls field, separate values with comma if there are more than 1 url (e.g. a secondary node for HA).
+
+    ![Set RM Endpoint](include/images/hadoop_queue_monitor_5.png)
+
+* Set fields "**Storm Worker Number**", "**Parallel Tasks Per Bolt**", and "**Fetching Metric Interval in Seconds**", or leave them as default if they fit your needs.
+
+    ![Set Advanced Fields](include/images/hadoop_queue_monitor_6.png)
+
+* Finally, hit "**Install**" button to complete it.
+
+## Use of the application
+
+* There is no need to define policies for this applicatoin to work, it could be integrated with "**Job Performance Monitoring Web**" application and consequently seen on cluster dashboard, as long as the latter application is installed too. See an exmple in the following screenshot:
+
+    ![In Dashboard](include/images/hadoop_queue_monitor_7.png)
