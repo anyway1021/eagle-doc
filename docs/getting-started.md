@@ -1,6 +1,6 @@
 # Architecture
 
-![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png =500x300)
+![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png)
 
 ### Eagle Apps
 
@@ -29,31 +29,51 @@ Eagle has multiple distributed real-time frameworks for efficiently developing h
       	
 #### Alert Engine
 
-![Eagle Alert Engine](include/images/alert_engine.png  =500x300)
+![Eagle Alert Engine](include/images/alert_engine.png)
 
-* Real-time: Apache Storm (Execution Engine) + Kafka (Message Bus)* Declarative Policy: SQL (CEP) on Streaming
-		from hadoopJmxMetricEventStream		[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
+* Real-time: Apache Storm (Execution Engine) + Kafka (Message Bus)
+* Declarative Policy: SQL (CEP) on Streaming
+		from hadoopJmxMetricEventStream
+		[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
 		select metric, host, value, timestamp, component, site 
-		insert into alertStream;* Dynamical onboarding & correlation* No downtime migration and upgrading
+		insert into alertStream;
+
+* Dynamical onboarding & correlation
+* No downtime migration and upgrading
 
 #### Storage Engine
 
-![Eagle Storage Engine](include/images/storage_engine.png =500x250)
+![Eagle Storage Engine](include/images/storage_engine.png)
 
 
 * Light-weight ORM Framework for HBase/RDMBS
     
-    	@Table("HbaseTableName")		@ColumnFamily("ColumnFamily")		@Prefix("RowkeyPrefix")		@Service("UniqueEntitytServiceName")		@JsonIgnoreProperties(ignoreUnknown = true)		@TimeSeries(false)		@Indexes({			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{		@Column("a")		private String desc;
-* Full-function SQL-Like REST Query 
+    	@Table("HbaseTableName")
+		@ColumnFamily("ColumnFamily")
+		@Prefix("RowkeyPrefix")
+		@Service("UniqueEntitytServiceName")
+		@JsonIgnoreProperties(ignoreUnknown = true)
+		@TimeSeries(false)
+		@Indexes({
+			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})
+		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{
+		@Column("a")
+		private String desc;
+
+* Full-function SQL-Like REST Query 
 
 		Query=UniqueEntitytServiceName[@site="sandbox"]{*}
-* Optimized Rowkey design for time-series data, optimized for metric/entity/log, etc. different storage types
+
+* Optimized Rowkey design for time-series data, optimized for metric/entity/log, etc. different storage types
 	
 		Rowkey ::= Prefix | Partition Keys | timestamp | tagName | tagValue | …  
-	* Secondary Index Support
-		@Indexes({@Index(name="INDEX_NAME", columns = { "SECONDARY_INDEX_COLUMN_NAME" }, unique = true/false)})
-		* Native HBase Coprocessor
-		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
+	
+
+* Secondary Index Support
+		@Indexes({@Index(name="INDEX_NAME", columns = { "SECONDARY_INDEX_COLUMN_NAME" }, unique = true/false)})
+		
+* Native HBase Coprocessor
+		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
 
 
 #### UI Framework

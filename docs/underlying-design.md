@@ -5,19 +5,33 @@
 
 Eagle Alert Engine is buit on open source realtime streaming infrastrcuture like [Apache Storm](http://storm.apache.org/) as default execution engine and [Apache  Kafka](http://kafka.apache.org/) as default messagig Bus.
 
-![Eagle Alert Engine](include/images/alert_engine.png  =500x300)### Declarative Policy Evaluator
-Eagle supports declarative policy with SQL (CEP) on distributed streaming environment.
+![Eagle Alert Engine](include/images/alert_engine.png)
 
-![Eagle Alert Policy Spec](include/images/alert_engine_policy_spec.png =500x200)Here are some typical examples:* Example 1: Alert if hadoop namenode capacity usage exceed 90 percentages
-		from hadoopJmxMetricEventStream		[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
+### Declarative Policy Evaluator
+Eagle supports declarative policy with SQL (CEP) on distributed streaming environment.
+
+![Eagle Alert Policy Spec](include/images/alert_engine_policy_spec.png)
+
+Here are some typical examples:
+
+* Example 1: Alert if hadoop namenode capacity usage exceed 90 percentages
+
+		from hadoopJmxMetricEventStream
+		[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
 		select metric, host, value, timestamp, component, site 
-		insert into alertStream;* Example 2: Alert if hadoop namenode HA switches	    from every 
+		insert into alertStream;
+
+* Example 2: Alert if hadoop namenode HA switches
+
+	    from every 
 		a = hadoopJmxMetricEventStream[metric=="hadoop.namenode.fsnamesystem.hastate"] 
 		-> 
 		b = hadoopJmxMetricEventStream[metric==a.metric and b.host == a.host and a.value != value)] 
 		within 10 min 
-		select a.host, a.value as oldHaState, b.value as newHaState, b.timestamp as timestamp, b.metric as metric, b.component as component, b.site as site insert into alertStream;	### Dynamic Coordinator
-![](include/images/alert_engine_coordination.png  =500x300)
+		select a.host, a.value as oldHaState, b.value as newHaState, b.timestamp as timestamp, b.metric as metric, b.component as component, b.site as site insert into alertStream;	
+
+### Dynamic Coordinator
+![Alert Engine Coordination](include/images/alert_engine_coordination.png)
 
 # Application Framework
 
@@ -91,7 +105,7 @@ place the full class name of an application provider:
 
 # Metric Storage
 
-![Eagle Storage Engine](include/images/storage_engine.png =500x250)
+![Eagle Storage Engine](include/images/storage_engine.png)
 
 ## Persistence ORM Framework
 
@@ -100,8 +114,19 @@ Eagle nativelly provides a light-weight ORM Framework for HBase/RDMBS, supportin
 For example as below:
 
     
-    	@Table("HbaseTableName")		@ColumnFamily("ColumnFamily")		@Prefix("RowkeyPrefix")		@Service("UniqueEntitytServiceName")		@JsonIgnoreProperties(ignoreUnknown = true)		@TimeSeries(false)		@Indexes({			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{		@Column("a")		private String desc;
-## SQL-Like REST Query Language
+    	@Table("HbaseTableName")
+		@ColumnFamily("ColumnFamily")
+		@Prefix("RowkeyPrefix")
+		@Service("UniqueEntitytServiceName")
+		@JsonIgnoreProperties(ignoreUnknown = true)
+		@TimeSeries(false)
+		@Indexes({
+			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})
+		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{
+		@Column("a")
+		private String desc;
+
+## SQL-Like REST Query Language
 
 Eagle provide SQL-Like REST query language on NoSQL Model. For example like
 
@@ -172,25 +197,30 @@ Eagle provide SQL-Like REST query language on NoSQL Model. For example like
 
 	JoinQuery ::= <Query> { "^" <Query> } <!-- as of now this syntax is not yet implemented, but union is used by letting service knowing it's a join -->
 
-## HBase Rowkey Design
-Optimized Rowkey design for time-series data, optimized for metric/entity/log, etc. different storage types
+## HBase Rowkey Design
+Optimized Rowkey design for time-series data, optimized for metric/entity/log, etc. different storage types
 	
 	Rowkey ::= Prefix | Partition Keys | timestamp | tagName | tagValue | …  
 
 #### Metric Rowkey Design
 
-	Rowkey ::= Metric Name | Partition Keys | timestamp | tagName | tagValue | …  
+	Rowkey ::= Metric Name | Partition Keys | timestamp | tagName | tagValue | …  
+
 #### Entity Rowkey Design
 	
 	Rowkey ::= Default Prefix | Partition Keys | timestamp | tagName | tagValue | …
 
 ##### Log Rowkey Design
 
-	Rowkey ::= Log Type | Partition Keys | timestamp | tagName | tagValue | …	Rowvalue ::= Log Content	
-### Secondary Index Support
-Eagle supports to define secondary index with annotation with `@Index`. For example:
-		@Indexes({@Index(name="INDEX_NAME", columns = { "SECONDARY_INDEX_COLUMN_NAME" }, unique = true/false)})		### Native HBase Coprocessor
-		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
+	Rowkey ::= Log Type | Partition Keys | timestamp | tagName | tagValue | …
+	Rowvalue ::= Log Content	
+### Secondary Index Support
+
+Eagle supports to define secondary index with annotation with `@Index`. For example:
+		@Indexes({@Index(name="INDEX_NAME", columns = { "SECONDARY_INDEX_COLUMN_NAME" }, unique = true/false)})
+		
+### Native HBase Coprocessor
+		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
 
 # UI Framework
 
