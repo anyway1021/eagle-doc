@@ -220,28 +220,46 @@ Application "**HADOOP_JMX_METRIC_MONITOR**" provide embedded collector script to
     * **Aggregate Bolt**
         * aggregate metrics for given time period received from Divide Spout
 
+## Setup & Installation
+* Make sure already setup a site (here use a demo site named "sandbox").
+
+* Install "Map Reduce History Job" app in eagle server(Take this application as an example).
+
+* Configure Application settings
+
+    ![application configures](include/images/jpm_configure.png)
+
+* Ensure a kafka topic named {SITE_ID}_map_reduce_failed_job (In current guide, it should be sandbox_map_reduce_failed_job) will be created.
+
+* Click "Install" button then you will see the MAP_REDUCE_FAILED_JOB_STREAM_{SITE_ID} in Alert->Streams.
+    ![application configures](include/images/jpm_streams.png)
+  This application will write stream data to kafka topic(created by last step)
+  
 ## Integration With Alert Engine
 
-In order to integrate applications with alert engine, follow below steps:
+In order to integrate applications with alert engine and send alerts, follow below steps(Take Map Reduce History Job application as an example):
 
-* **define stream**
+* **define stream and configure data sink**
     * define stream in resource/META-INF/providers/xxxProviders.xml
-* **configure data sink**
-    * currently, create kafka topic
-* **emit stream data**
-    * currently, write to kafka topic
-* **define policy**
-    * define policy in web ui and enable it, eagle server will schedule it
-* **view alerts**
-    * view in alerts page
+    For example, MAP_REDUCE_FAILED_JOB_STREAM_{SITE_ID}
+    * configure data sink
+    For example, create kafka topic {SITE_ID}_map_reduce_failed_job
 
-Currently, Map Reduce History Job Monitoring has been integrated with alert engine. For example, if you want to receive map reduce job failure alerts, you can define policies (SiddhiQL) as the following:
+* **define policy**
+
+For example, if you want to receive map reduce job failure alerts, you can define policies (SiddhiQL) as the following:
 ```sql
 from map_reduce_failed_job_stream[site=="sandbox" and currentState=="FAILED"]
 select site, queue, user, jobType, jobId, submissionTime, trackingUrl, startTime, endTime
 group by jobId insert into map_reduce_failed_job_stream_out
 ```
+    
+   ![define policy](include/images/jpm_define_policy.png)
+   
+* **view alerts**
+You can view alerts in Alert->alerts page.
 
+## Stream Schema
 All columns above are predefined in stream map_reduce_failed_job_stream defined in
 
     eagle-jpm/eagle-jpm-mr-history/src/main/resources/META-INF/providers/org.apache.eagle.jpm.mr.history.MRHistoryJobApplicationProvider.xml
