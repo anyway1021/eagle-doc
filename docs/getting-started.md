@@ -23,10 +23,10 @@ For more applications, see [Applications](applications).
 * [Apache Ranger](http://ranger.apache.org)
 * [Dataguise](https://www.dataguise.com)
 
-### Eagle Core
+### Eagle Framework
 
 Eagle has multiple distributed real-time frameworks for efficiently developing highly scalable monitoring applications.
-
+      	
 #### Alert Engine
 
 ![Eagle Alert Engine](include/images/alert_engine.png  =500x300)
@@ -55,65 +55,6 @@ Eagle has multiple distributed real-time frameworks for efficiently developing h
 		* Native HBase Coprocessor
 		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
 
-##### Application Framework
-* Application
-
-	An "Application" or "App" is composed of data integration, policies and insights for one data source.
-
-* Application Descriptor
-
-	An "Application Descriptor" is a static packaged metadata information consist of
-    * __Basic__: type, name, version, description.
-    * __Application__: the application process to run.
-    * __Configuration Descriptor____:  describe the configurations required by the application when starting like name, displayName, defaultValue Description, required, etc. which will automatically be visualized in configuration editor.
-    * __Streams__: the streams schema the application will export.
-    * __Docs: application specific documentations which will be embedded in necessary area during the whole lifecyle of application management.
-    * __Sample__: ApplicationDesc of JPM_WEB_APP
-    
-            {
-                type: "JPM_WEB_APP",
-                name: "Job Performance Monitoring Web ",
-                version: "0.5.0-incubating",
-                description: null,
-                appClass: "org.apache.eagle.app.StaticApplication",
-                jarPath: "/opt/eagle/0.5.0-incubating-SNAPSHOT-build-20161103T0332/eagle-0.5.0-incubating-SNAPSHOT/lib/eagle-topology-0.5.0-incubating-SNAPSHOT-hadoop-2.4.1-11-assembly.jar",
-                viewPath: "/apps/jpm",
-                providerClass: "org.apache.eagle.app.jpm.JPMWebApplicationProvider",
-                configuration: {
-                    properties: [{
-                        name: "service.host",
-                        displayName: "Eagle Service Host",
-                        value: "localhost",
-                        description: "Eagle Service Host, default: localhost",
-                        required: false
-                    }, {
-                        name: "service.port",
-                        displayName: "Eagle Service Port",
-                        value: "8080",
-                        description: "Eagle Service Port, default: 8080",
-                        required: false
-                    }]
-                },
-                streams: null,
-                docs: null,
-                executable: false,
-                dependencies: [{
-                    type: "MR_RUNNING_JOB_APP",
-                    version: "0.5.0-incubating",
-                    required: true
-                }, {
-                    type: "MR_HISTORY_JOB_APP",
-                    version: "0.5.0-incubating",
-                    required: true
-                }]
-            }
-
-* **Application Provider**
-	
-	An "application provider" in fact is a package management and loading mechanism leveraging [Java SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
-	* For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider:
-
-        	org.apache.eagle.app.jpm.JPMWebApplicationProvider
 
 #### UI Framework
 
@@ -122,6 +63,66 @@ Eagle UI is consist of following parts:
 * Eagle Main UI
 * Eagle App Portal/Dashboard/Widgets
 * Eagle Customized Dashboard 
+
+#### Application Framework
+
+##### Application
+
+An "Application" or "App" is composed of data integration, policies and insights for one data source.
+
+##### Application Descriptor 
+
+An "Application Descriptor" is a static packaged metadata information consist of basic information like type, name, version, description, and application process, configuration, streams, docs, policies and so on. 
+
+Here is an example ApplicationDesc of `JPM_WEB_APP`
+
+        {
+        type: "JPM_WEB_APP",
+        name: "Job Performance Monitoring Web ",
+        version: "0.5.0-incubating",
+        description: null,
+        appClass: "org.apache.eagle.app.StaticApplication",
+        jarPath: "/opt/eagle/0.5.0-incubating-SNAPSHOT-build-20161103T0332/eagle-0.5.0-incubating-SNAPSHOT/lib/eagle-topology-0.5.0-incubating-SNAPSHOT-hadoop-2.4.1-11-assembly.jar",
+        viewPath: "/apps/jpm",
+        providerClass: "org.apache.eagle.app.jpm.JPMWebApplicationProvider",
+        configuration: {
+            properties: [{
+                name: "service.host",
+                displayName: "Eagle Service Host",
+                value: "localhost",
+                description: "Eagle Service Host, default: localhost",
+                required: false
+            }, {
+                name: "service.port",
+                displayName: "Eagle Service Port",
+                value: "8080",
+                description: "Eagle Service Port, default: 8080",
+                required: false
+            }]
+        },
+        streams: null,
+        docs: null,
+        executable: false,
+        dependencies: [{
+            type: "MR_RUNNING_JOB_APP",
+            version: "0.5.0-incubating",
+            required: true
+        }, {
+            type: "MR_HISTORY_JOB_APP",
+            version: "0.5.0-incubating",
+            required: true
+        }]
+        }
+    
+
+##### Application Provider
+
+Appilcation Provider is a package management and loading mechanism leveraging [Java SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
+	
+For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider:
+
+	org.apache.eagle.app.jpm.JPMWebApplicationProvider
+
 
 ---
 
