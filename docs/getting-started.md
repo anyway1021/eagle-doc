@@ -1,75 +1,69 @@
 # Architecture
 
-## Overview
+## Eagle Framework
 
-![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png)
 
-## Ecosystem
-
-![Eagle Ecosystem](include/images/eagle_ecosystem.png)
-
-### Eagle Framework
+-> ![Eagle 0.5.0 Architecture](include/images/eagle_arch_v0.5.0.png =500x300) <-
 
 Eagle has multiple distributed real-time frameworks for efficiently developing highly scalable monitoring applications.
 
-* Alert Engine
+#### Alert Engine
 
-`Placeholder for topic: Alert Engine`
+-> ![Eagle Alert Engine](include/images/alert_engine.png  =500x300) <-
 
-* Storage Engine
+* Real-time: Apache Storm (Execution Engine) + Kafka (Message Bus)* Declarative Policy: SQL (CEP) on Streaming	
+	* Filter	* Join	* Aggregation: Avg, Sum , Min, Max, etc	* Group by	* Having	* Stream handlers for window: TimeWindow, Batch Window, Length Window 	* Conditions and Expressions: and, or, not, ==,!=, >=, >, <=, <, and arithmetic operations	* Pattern Processing	* Sequence processing	* Event Tables: intergrate historical data in realtime processing	* SQL-Like Query: Query, Stream Definition and Query Plan compilation
+			from hadoopJmxMetricEventStream			[metric == "hadoop.namenode.fsnamesystemstate.capacityused" and value > 0.9] 
+			select metric, host, value, timestamp, component, site 
+			insert into alertStream;* Dynamical onboarding & correlation* No downtime migration and upgrading
 
-`Placeholder for topic: Storage Engine`
+#### Storage Engine
 
-* Application Framework
+-> ![Eagle Storage Engine](include/images/storage_engine.png =500x250) <-
 
-`Placeholder for topic: Application Framework`
+* Light-weight ORM Framework for HBase/RDMBS
+    
+    	@Table("HbaseTableName")		@ColumnFamily("ColumnFamily")		@Prefix("RowkeyPrefix")		@Service("UniqueEntitytServiceName")		@JsonIgnoreProperties(ignoreUnknown = true)		@TimeSeries(false)		@Indexes({			@Index(name="Index_1_alertExecutorId", columns = { "alertExecutorID" }, unique = true)})		public class AlertDefinitionAPIEntity extends TaggedLogAPIEntity{		@Column("a")
+		private String desc;		@Column("b")		private String policyDef;		@Column("c")		private String dedupeDef;
+* Full-function SQL-Like REST Query 
 
-* UI Framework
+		Query=UniqueEntitytServiceName[@site="sandbox"]{*}
+* Optimized Rowkey design for time-series data
 
-`Placeholder for topic: UI Framework`
+	* Uniform HBase rowkey design
+	
+			Rowkey ::= Prefix | Partition Keys | timestamp | tagName | tagValue | …  
+	
+	* Metric rowkey design
+		
+			Rowkey ::= Metric Name | Partition Keys | timestamp | tagName | tagValue | …  
+	
+	* Entity rowkey design
+	
+			Rowkey ::= Default Prefix | Partition Keys | timestamp | tagName | tagValue | …
+			
+	* Log rowkey design
+	
+			Rowkey ::= Log Type | Partition Keys | timestamp | tagName | tagValue | …			Rowvalue ::= Log Content	* Native HBase Coprocessor
+		org.apache.eagle.storage.hbase.query.coprocessor.AggregateProtocolEndPoint
+* Secondary Index Support
+		@Indexes({@Index(name="INDEX_NAME", columns = { "SECONDARY_INDEX_COLUMN_NAME" }, unique = true/false)})
 
-### Eagle Apps
+##### Application Framework
+* **Application**
 
-* Security/ Hadoop/ Operational Intelligence / …. For see more applications, see [Applications](applications).
+	An "Application" or "App" is composed of data integration, policies and insights for one data source.
 
-### Eagle Interface
+* **Application Descriptor**
 
-* REST Service / Management UI / Customizable Analytics Visualization
-
-### Eagle Integration
-
-* Ambari / Docker / Ranger / Dataguise
-
----
-
-# Concepts
-
-* Here are some terms we are using in Apache Eagle (incubating, called Eagle in the following), please check them for your reference. They are basic knowledge of Eagle which also will help to well understand Eagle.
-
-## Site
-
-* A site can be considered as a physical data center. Big data platform e.g. Hadoop may be deployed to multiple data centers in an enterprise.
-
-## Application
-
-* An "Application" or "App" is composed of data integration, policies and insights for one data source.
-
-## Application Descriptor
-
-* An "Application Descriptor" is a static packaged metadata information consist of:
-
+	An "Application Descriptor" is a static packaged metadata information consist of
     * **Basic information**: type, name, version, description.
-
     * **Application**: the application process to run.
-
     * **Configuration Descriptor**:  describe the configurations required by the application when starting like name, displayName, defaultValue Description, required, etc. which will automatically be visualized in configuration editor.
-
     * **Streams**: the streams schema the application will export.
-
     * **Docs**: application specific documentations which will be embedded in necessary area during the whole lifecyle of application management.
-
     * **Sample**: ApplicationDesc of JPM_WEB_APP
-
+    
             {
                 type: "JPM_WEB_APP",
                 name: "Job Performance Monitoring Web ",
@@ -108,13 +102,59 @@ Eagle has multiple distributed real-time frameworks for efficiently developing h
                 }]
             }
 
-## Application Provider
+* **Application Provider**
+	
+	An "application provider" in fact is a package management and loading mechanism leveraging [Java SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
+	* For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider:
 
-* An "application provider" in fact is a package management and loading mechanism leveraging [Java SPI](https://docs.oracle.com/javase/tutorial/ext/basics/spi.html).
+        	org.apache.eagle.app.jpm.JPMWebApplicationProvider
 
-* For example, in file `META-INF/services/org.apache.eagle.app.spi.ApplicationProvider`, place the full class name of an application provider:
+#### UI Framework
 
-        org.apache.eagle.app.jpm.JPMWebApplicationProvider
+Eagle UI is consist of following parts:
+
+* Eagle Main UI
+* Eagle App Portal/Dashboard/Widgets
+* Eagle Customized Dashboard 
+
+## Ecosystem
+
+-> ![Eagle Ecosystem](include/images/eagle_ecosystem.png =400x300) <-
+
+### Eagle Apps
+
+* Security
+* Hadoop
+* Operational Intelligence
+
+For more applications, see [Applications](applications).
+
+### Eagle Interface
+
+* REST Service
+* Management UI
+* Customizable Analytics Visualization
+
+### Eagle Integration
+
+* [Apache Ambari](https://ambari.apache.org)
+* [Docker](https://www.docker.com)
+* [Apache Ranger](http://ranger.apache.org)
+* [Dataguise](https://www.dataguise.com)
+
+---
+
+# Concepts
+
+* Here are some terms we are using in Apache Eagle (incubating, called Eagle in the following), please check them for your reference. They are basic knowledge of Eagle which also will help to well understand Eagle.
+
+## Site
+
+* A site can be considered as a physical data center. Big data platform e.g. Hadoop may be deployed to multiple data centers in an enterprise.
+
+## Application
+
+* An "Application" or "App" is composed of data integration, policies and insights for one data source.
 
 ## Policy
 
