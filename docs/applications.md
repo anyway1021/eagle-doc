@@ -257,6 +257,7 @@ group by jobId insert into map_reduce_failed_job_stream_out
    ![define policy](include/images/jpm_define_policy.png)
    
 * **view alerts**
+
 You can view alerts in Alert->alerts page.
 
 ## Stream Schema
