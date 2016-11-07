@@ -2,7 +2,7 @@
 
 * After Apache Eagle has been deployed (please reference [**deployment**](getting-started/#deployment)), you can enter deployment directory and use commands below to control Apache Eagle Server.
 
-    ./bin/eagle-server.sh start|stop|status
+		./bin/eagle-server.sh start|stop|status
 
 * After starting the Eagle server, please type http://<EAGLE_SERVER_HOST>:<PORT>/ to open the web ui of Eagle.
 
