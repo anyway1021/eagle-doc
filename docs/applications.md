@@ -79,7 +79,7 @@ This application aims to monitor user activities on OOZIE via the oozie audit lo
 
 * Kafka ingest: this application consumes data from Kafka. In other words, users have to stream the log into Kafka first. 
 
-* Data re-procesing, which includes raw log parser, ip zone joiner, sensitivity information joiner. 
+* Data re-procesing, which includes raw log parser, sensitivity information joiner. 
 
 * Kafka sink: parsed data will flows into Kafka again, which will be consumed by the alert engine. 
 
